@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t shinyatakaramoto/react-test -f ./client/Dockerfile.dev ./client
+
+secript:
+  - docker run shinyatakaramoto/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t shinyatakaramoto/multi-client ./client
+  - docker build -t shinyatakaramoto/multi-nginx ./nginx
+  - docker build -t shinyatakaramoto/multi-server ./server
+  - docker build -t shinyatakaramoto/multi-worker ./worker
